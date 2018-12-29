@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "337483169928",
+    "firebase_url": "https://demoproject-6e7b3.firebaseio.com",
+    "project_id": "demoproject-6e7b3",
+    "storage_bucket": "demoproject-6e7b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337483169928:android:6003773f2e73594e",
+        "android_client_info": {
+          "package_name": "com.smartheard.flutterapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337483169928-1pk1ce3o3jl0jn1eu2ggdh1ake0vehkt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCF0X6A275Ji8Pn8qda1hwvLp4RMz_RdGI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
