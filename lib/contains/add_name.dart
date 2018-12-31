@@ -16,8 +16,6 @@ class Addname extends State<Anothername> {
     );
   }
 
-
-
 }
 
 Widget _BuildName(BuildContext context) {

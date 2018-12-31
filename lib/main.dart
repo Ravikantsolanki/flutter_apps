@@ -145,13 +145,17 @@ void _deleteData(BuildContext context, DocumentSnapshot data){
   final record = Record.fromSnapshot(data);
   Firestore.instance.runTransaction((transaction) async {
     try {
+      _processIndicator(context);
       final freshSnapshot = await transaction.get(
           record.reference);
       final DocumentSnapshot ds = await transaction.get(
           Firestore.instance.collection('baby').document(
               freshSnapshot.documentID));
 
-      await transaction.delete(ds.reference);
+      await transaction.delete(ds.reference).then((result){
+          Navigator.pop(context);
+          _showSnackbar(context);
+      });
     } catch (error) {
       print('error:$error');
     }
@@ -161,6 +165,54 @@ void _deleteData(BuildContext context, DocumentSnapshot data){
 
   );
   //Firestore.instance.collection('baby').document(Firestore.i).
+}
+
+void _showSnackbar(BuildContext context){
+
+  var snackbar = SnackBar(
+    content: Text("Sucessfully deleted"),
+  );
+
+  Scaffold.of(context).showSnackBar(snackbar);
+  new Future.delayed(new Duration(seconds:3),(){
+    SnackBarClosedReason.remove;
+  });
+  
+
+}
+
+
+void _processIndicator(BuildContext context){
+
+ /* showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context){
+      new Dialog(
+        child: new Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            new CircularProgressIndicator(),
+            new Text("Process running"),
+          ],
+        ),
+      );
+
+    }
+  );*/
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    child: new Dialog(
+      child: new Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          new CircularProgressIndicator(),
+          new Text("Process running"),
+        ],
+      ),
+    ),
+  );
 }
 
 class Record {
