@@ -27,6 +27,8 @@
 .pub-cache/
 .pub/
 build/
+gen/
+ios/Runner.xcworkspace
 
 # Android related
 **/android/**/gradle-wrapper.jar
