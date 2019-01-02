@@ -22,23 +22,20 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Baby Name Votes')),
-      body: _buildBody(context),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          Navigator.push(context,MaterialPageRoute(builder: (context){
-            return Anothername();
-          }));
-        },
-        child: Icon(Icons.add),
-        tooltip: 'Add one more item',
-      )
-    );
+        appBar: AppBar(title: Text('Baby Name Votes')),
+        body: _buildBody(context),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Anothername();
+            }));
+          },
+          child: Icon(Icons.add),
+          tooltip: 'Add one more item',
+        ));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -56,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return ListView(
       padding: const EdgeInsets.only(top: 20.0),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
-
     );
   }
 
@@ -73,42 +69,40 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         child: ListTile(
           title: Text(record.name),
-          subtitle:Text(record.votes.toString()) ,
-
+          subtitle: Text(record.votes.toString()),
           onTap: () => Firestore.instance.runTransaction((transaction) async {
-            final freshSnapshot = await transaction.get(record.reference);
-            final fresh = Record.fromSnapshot(freshSnapshot);
-            await transaction
-                .update(record.reference, {'votes': fresh.votes + 1});
-          }),
-
+                final freshSnapshot = await transaction.get(record.reference);
+                final fresh = Record.fromSnapshot(freshSnapshot);
+                await transaction
+                    .update(record.reference, {'votes': fresh.votes + 1});
+              }),
           trailing: GestureDetector(
-            child: Icon(Icons.delete, color: Colors.indigoAccent,),
-            onTap:() {
-              _AlertDialoge(context,data);
-            }
-          ),
+              child: Icon(
+                Icons.delete,
+                color: Colors.indigoAccent,
+              ),
+              onTap: () {
+                _AlertDialoge(context, data);
+              }),
         ),
       ),
     );
   }
 
-  void _AlertDialoge(BuildContext context,DocumentSnapshot data){
-
+  void _AlertDialoge(BuildContext context, DocumentSnapshot data) {
     var alert = AlertDialog(
       title: Text('Are you sure?'),
       actions: <Widget>[
         FlatButton(
           child: Text('Ok'),
-          onPressed: (){
+          onPressed: () {
             Navigator.pop(context);
             _deleteData(context, data);
           },
         ),
-
         FlatButton(
           child: Text('cancel'),
-          onPressed: (){
+          onPressed: () {
             Navigator.pop(context);
           },
         ),
@@ -137,13 +131,25 @@ class _MyHomePageState extends State<MyHomePage> {
       ),*/
     );
 
-    showDialog(context: context,builder: (BuildContext context) => alert);
+    showDialog(context: context, builder: (BuildContext context) => alert);
   }
 }
 
-void _deleteData(BuildContext context, DocumentSnapshot data){
+void _deleteData(BuildContext context, DocumentSnapshot data) {
+  _processIndicator(context);
   final record = Record.fromSnapshot(data);
-  Firestore.instance.runTransaction((transaction) async {
+  try {
+    var document = Firestore.instance
+        .collection('baby')
+        .document(record.reference.documentID);
+    document.delete().then((result) {
+      Navigator.pop(context);
+      _showSnackbar(context);
+    });
+  } catch (error) {
+    print('error:$error');
+  }
+  /*Firestore.instance.runTransaction((transaction) async {
     try {
       _processIndicator(context);
       final freshSnapshot = await transaction.get(
@@ -163,28 +169,23 @@ void _deleteData(BuildContext context, DocumentSnapshot data){
 
   }
 
-  );
+  );*/
   //Firestore.instance.collection('baby').document(Firestore.i).
 }
 
-void _showSnackbar(BuildContext context){
-
+void _showSnackbar(BuildContext context) {
   var snackbar = SnackBar(
     content: Text("Sucessfully deleted"),
   );
 
   Scaffold.of(context).showSnackBar(snackbar);
-  new Future.delayed(new Duration(seconds:3),(){
+  new Future.delayed(new Duration(seconds: 3), () {
     SnackBarClosedReason.remove;
   });
-  
-
 }
 
-
-void _processIndicator(BuildContext context){
-
- /* showDialog(
+void _processIndicator(BuildContext context) {
+  /* showDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context){
